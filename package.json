@@ -1,7 +1,7 @@
 {
   "name": "musichub",
   "version": "1.0.0",
-  "description": "",
+  "description": "music app",
   "main": "main.js",
   "engines": {
     "node": "18.x"
