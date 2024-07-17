@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='UTF-8'>
+  <title>musichub</title>
+  <style>
+    @font-face {
+      font-family: 'CircularStdMedium';
+      src: url(Font/circular-std-medium-500.ttf) format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      background-color: #111828;
+      /* background-color: #1d1e22; */
+      margin: 100px 10%;
+      color: #ffffff;
+      font-family: 'CircularStdMedium';
+      font-size: 22px;
+    }
+
+    form {
+      background-color: #ffffff;
+      width: 100%;
+      max-width: 500px;
+      height: 45px;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: 0 auto;
+      margin-bottom: 30px;
+    }
+
+    input {
+      all: unset;
+      font: 16px system-ui;
+      color: #000000;
+      height: 100%;
+      width: 100%;
+      padding: 6px 10px;
+    }
+
+    ::placeholder {
+      color: #000000;
+      opacity: 0.7;
+    }
+
+    svg {
+      color: #000000;
+      fill: currentColor;
+      width: 24px;
+      height: 24px;
+      padding: 10px;
+    }
+
+    button {
+      all: unset;
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        margin: 50px 5%;
+        font-size: 18px;
+      }
+
+      form {
+        height: 45px;
+        margin-bottom: 20px;
+      }
+
+      input {
+        font: 14px system-ui;
+        padding: 4px 8px;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+        padding: 8px;
+      }
+
+      button {
+        width: 36px;
+        height: 36px;
+      }
+
+      #audio-player {
+        display: flex;
+        /* Change display property to flex or any other suitable value */
+      }
+
+      #audio-player.active {
+        display: flex;
+      }
+    }
+
+    #results ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    #results ul li {
+      font-family: 'CircularStdMedium';
+      display: flex;
+      flex-direction: column;
+      margin-top: 50px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .list-content img {
+      width: 60px;
+      height: 60px;
+      margin-right: 10px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+    .download-button {
+      background-color: white;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .download-button svg {
+      fill: black;
+      width: 20px;
+      height: 20px;
+    }
+
+    .list-content {
+      display: flex;
+      align-items: center;
+    }
+
+    .text-content {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .title {
+      font-size: 18px;
+      color: #ffffff;
+      max-width: 450px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #aaaaaa;
+      margin-top: 6px;
+    }
+
+    #audio-player {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #2b2c30;
+      padding: 10px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #audio-player.active {
+      display: flex;
+    }
+
+    .player-details {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    #audio-player img {
+      width: 60px;
+      height: 60px;
+      border-radius: 4px;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+
+    .title-container {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    #audio-player .title {
+      color: #1DB954;
+      font-size: 18px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #audio-player .subtitle {
+      color: #aaaaaa;
+      font-size: 14px;
+      margin-top: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .audio-controls {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-left: auto;
+      margin-right: 100px;
+    }
+
+    .audio-control-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .audio-control-button svg {
+      fill: #ffffff;
+      width: 24px;
+      height: 24px;
+
+
+    }
+
+    #title {
+      text-align: center;
+    }
+
+    #logo {
+      color: #fff;
+      font-size: 30px;
+    }
+
+    #logo {
+      font-size: 40px;
+    }
+
+    #spanlogo {
+      background-color: #1DB954;
+      /* background-color: orange; */
+      color: #000;
+      padding: 6px;
+      border-radius: 5px;
+
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+      /* Adjust height as needed */
+      font-size: 18px;
+      color: #ffffff;
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+
+    .drawer {
+      position: fixed;
+      right: -40%;
+      /* Initially hidden */
+      top: 0;
+      width: 40%;
+      height: 100%;
+      background-color: #111828;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+      transition: right 0.3s;
+      z-index: 1000;
+    }
+
+    .drawer.open {
+      right: 0;
+      /* Show drawer */
+    }
+
+    .drawer-content {
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .drawer-content ul li {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      padding-right: 20px;
+      /* Adjust margin as needed */
+    }
+
+    .drawer-content {
+      padding-right: 20px;
+      /* adjust the value as needed */
+    }
+
+
+    #queue {
+      list-style-type: none;
+      /* Remove bullet points */
+      padding: 0;
+      /* Remove default padding */
+      margin: 0;
+      /* Remove default margin */
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0.3s, opacity 0.3s;
+      z-index: 999;
+    }
+
+    .overlay.visible {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    #queueButton {
+      font-size: 16px;
+      color: #1DB954;
+      margin-left: 10;
+    }
+
+    .list-content2 img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+    .list-content2 {
+      display: flex;
+      align-items: center;
+      margin-left: 10px;
+      margin-bottom: 20px;
+    }
+
+    .text-content2 {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .title2 {
+      font-size: 16px;
+      color: #ffffff;
+      max-width: 90%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .subtitle2 {
+      font-size: 14px;
+      color: #aaaaaa;
+      margin-top: 6px;
+    }
+    /* #loop-toggle{
+      height: 10px;
+      width: 10px;
+    } */
+  </style>
+</head>
+
+<body>
+
+  <center>
+    <h1 id="logo">Music <span id="spanlogo">Hub</span></h1>
+  </center>
+
+  <form role="search" id="form" method="POST" action="/search">
+    <input type="search" id="query" name="q" placeholder="What Do You want to listen...."
+      aria-label="Search through site content">
+    <button type="submit">
+      <svg viewBox="0 0 1024 1024">
+        <path class="path1"
+          d="M848.471 928l-263.059-263.059c-48.941 36.706-110.118 55.059-177.412 55.059-171.294 0-312-140.706-312-312s140.706-312 312-312c171.294 0 312 140.706 312 312 0 67.294-24.471 128.471-55.059 177.412l263.059 263.059-79.529 79.529zM189.623 408.078c0 121.364 97.091 218.455 218.455 218.455s218.455-97.091 218.455-218.455c0-121.364-103.159-218.455-218.455-218.455-121.364 0-218.455 97.091-218.455 218.455z">
+        </path>
+      </svg>
+    </button>
+  </form>
+  <div id="results"></div>
+
+  <!-- Audio Player Section -->
+  <div id="audio-player">
+    <div class="player-details">
+      <img id="player-thumbnail" src="" alt="Thumbnail">
+      <div class="title-container">
+        <div class="title" id="player-title"></div>
+        <div class="subtitle" id="player-subtitle"></div>
+      </div>
+
+
+    </div>
+    <div class="audio-controls">
+
+      <!-- <button class="audio-control-button" id="loop-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#f5f7f9" d="M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96l160 0 0 32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32l0 32L160 64C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96l-160 0 0-32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-32 160 0c88.4 0 160-71.6 160-160z"/></svg>
+      <!-- </button> --> 
+      <button class="audio-control-button" id="skip-backward">
+        <svg viewBox="0 0 320 512">
+          <path
+            d="M267.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160L64 241V96c0-17.7-14.3-32-32-32S0 78.3 0 96V416c0 17.7 14.3 32 32 32s32-14.3 32-32V271l11.5 9.6 192 160z" />
+        </svg>
+      </button>
+      <button class="audio-control-button" id="play-pause">
+        <svg viewBox="0 0 384 512" id="play-icon">
+          <path
+            d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z" />
+        </svg>
+        <svg viewBox="0 0 320 512" id="pause-icon">
+          <path
+            d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z" />
+        </svg>
+      </button>
+      <button class="audio-control-button" id="skip-forward">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+          <path
+            d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z" />
+        </svg>
+      </button>
+      <button id="queueButton"><svg xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+          <path fill="#eaecf0"
+            d="M64 144a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM64 464a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48-208a48 48 0 1 0 -96 0 48 48 0 1 0 96 0z" />
+        </svg></button>
+    </div>
+
+    <div class="drawer" id="drawer">
+      <div class="drawer-content">
+        <center>
+          <h2>Play Queue</h2>
+        </center>
+        <ul id="queue"></ul> <!-- ListView will be displayed here -->
+      </div>
+      <audio id="audio-element" autoplay></audio>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+      const form = document.getElementById('form');
+      const query = document.getElementById('query');
+      const resultsContainer = document.getElementById('results');
+      const audioPlayer = document.getElementById('audio-player');
+      const audioElement = document.getElementById('audio-element');
+      const playerThumbnail = document.getElementById('player-thumbnail');
+      const playerTitle = document.getElementById('player-title');
+      const playerSubtitle = document.getElementById('player-subtitle');
+      const progressElement = document.getElementById('progress');
+      const playPauseButton = document.getElementById('play-pause');
+      const skipBackwardButton = document.getElementById('skip-backward');
+      const skipForwardButton = document.getElementById('skip-forward');
+      const loopToggleButton = document.getElementById('loop-toggle');
+      let playingID = null;
+      let isPlaying = false;
+      let playQueue = [];
+      let currentTrackIndex = 0;
+      let currentPlayingItem = null;
+      document.getElementById('overlay').addEventListener('click', closeDrawer);
+
+
+
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        if (query.value.trim() !== '') { // Check if input is not empty
+          resultsContainer.innerHTML = '<div class="loading">Searching...</div>';
+          const response = await fetch('/search', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ query: query.value })
+          });
+          const result = await response.json();
+          displayResults(result);
+          query.value = '';
+        }
+      });
+
+
+
+      function displayResults(data) {
+        resultsContainer.innerHTML = ''; // Clear previous results
+        const ul = document.createElement('ul');
+
+        data.forEach(item => {
+          const li = document.createElement('li');
+          const listContent = document.createElement('div');
+          listContent.classList.add('list-content');
+
+          // Thumbnail image
+          const img = document.createElement('img');
+          img.src = `https://img.youtube.com/vi/${item.id}/mqdefault.jpg`;
+          img.alt = 'Thumbnail';
+          img.style.marginRight = '10px';
+          img.style.width = '60px';
+          img.style.height = '60px';
+          img.style.borderRadius = '4px';
+          listContent.appendChild(img);
+
+          // Title and subtitle
+          const textContent = document.createElement('div');
+          textContent.classList.add('text-content');
+
+          const title = document.createElement('span');
+          title.textContent = item.title;
+          title.classList.add('title');
+          textContent.appendChild(title);
+
+          const subtitle = document.createElement('span');
+          subtitle.textContent = item.channel;
+          subtitle.classList.add('subtitle');
+          textContent.appendChild(subtitle);
+
+          listContent.appendChild(textContent);
+
+          // Download button
+          const downloadButton = document.createElement('button');
+          downloadButton.classList.add('download-button');
+          downloadButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>`;
+          listContent.appendChild(downloadButton);
+
+          // Loading indicator
+
+
+          li.appendChild(listContent);
+          ul.appendChild(li);
+
+          // Click event listener for each list item
+          li.addEventListener('click', async () => {
+
+            displayEmptyAudioPlayerData();
+            playQueue = [];
+            if (currentPlayingItem) {
+              // Reset previously playing item's style
+              // audioPlayer.classList.add('active');
+
+              currentPlayingItem.title.style.color = '#ffffff'; // Restore original color
+            }
+
+
+            // title.textContent = 'Playing'; // Display "Playing" text temporarily
+            title.style.color = '#1DB954'; // Change color to green
+
+            await fetchAudioUrl(`https://www.youtube.com/watch?v=${item.id}`, item.title, item.channel, item.id);
+            addToPlayQueue({ id: item.id, title: item.title, subtitle: item.channel, thumbnail: `https://img.youtube.com/vi/${item.id}/mqdefault.jpg` })
+            getRelatedAudios(item.id)
+
+            // Set current playing item to this item
+            currentPlayingItem = {
+              title: title,
+            };
+
+            // Restore original title after loading
+            title.textContent = item.title;
+            title.style.color = '#1DB954'; // Restore original color
+
+          });
+        });
+
+        resultsContainer.appendChild(ul);
+      }
+
+
+
+
+
+      async function fetchAudioUrl(videoUrl, title, subtitle, id) {
+
+        try {
+          const response = await fetch('/fetch-urls', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ videoUrl })
+          });
+          const data = await response.json();
+          console.log("the audio url is", data.url)
+          playAudio(data.url, title, subtitle, id);
+
+
+        } catch (error) {
+          console.error('Error fetching audio URL:', error.message);
+        }
+      }
+
+      function playAudio(url, title, subtitle, id) {
+        // addToPlayQueue({ id: id, title: title, subtitle: subtitle, thumbnail: `https://img.youtube.com/vi/${id}/mqdefault.jpg` })
+        playerThumbnail.src = `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
+        playerTitle.textContent = title;
+        playerSubtitle.textContent = subtitle;
+        audioElement.src = url;
+        audioElement.play();
+        isPlaying = true;
+        updatePlayPauseButton();
+        console.log(currentTrackIndex)
+        document.getElementById('queueButton').addEventListener('click', toggleDrawer);
+
+       
+          // Call the function after the DOM is loaded
+          // changeTitleColorToGreen(currentTrackIndex)
+       
+
+        // changeTitleColorAtIndex(currentTrackIndex)
+
+      }
+
+
+      async function getRelatedAudios(id) {
+        console.log(id)
+        try {
+          const response = await fetch('/suggested-audios', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ videoId: id })
+          });
+          const data = await response.json();
+          data.forEach(item => {
+            playQueue.push({
+              id: item.id,
+              title: item.title,
+              subtitle: item.subtitle,
+              thumbnail: `https://img.youtube.com/vi/${item.id}/mqdefault.jpg`,
+
+            });
+          });
+
+          console.log('Updated Queue:', playQueue);
+
+
+
+        } catch (error) {
+          console.error('Error fetching audio URL:', error.message);
+        }
+      }
+
+      function updatePlayPauseButton() {
+        if (isPlaying) {
+          document.getElementById('play-icon').style.display = 'none';
+          document.getElementById('pause-icon').style.display = 'block';
+        } else {
+          document.getElementById('play-icon').style.display = 'block';
+          document.getElementById('pause-icon').style.display = 'none';
+        }
+      }
+
+      function populateListView() {
+        const queueList = document.getElementById('queue');
+        queueList.innerHTML = ''; // Clear previous items
+
+        playQueue.forEach(item => {
+          const li = document.createElement('li');
+          li.classList.add('list-content2');
+          const thumbnail = document.createElement('img');
+          thumbnail.src = item.thumbnail;
+          thumbnail.alt = 'Thumbnail';
+          thumbnail.style.width = '60px';
+          thumbnail.style.height = '60px';
+          thumbnail.style.borderRadius = '4px';
+          thumbnail.style.objectFit = 'cover';
+          thumbnail.style.marginRight = '10px';
+
+          const textContent = document.createElement('div');
+          textContent.classList.add('text-content2');
+
+          const title = document.createElement('span');
+          title.textContent = item.title;
+          title.classList.add('title2');
+
+          const subtitle = document.createElement('span');
+          subtitle.textContent = item.subtitle;
+          subtitle.classList.add('subtitle2');
+
+          textContent.appendChild(title);
+          textContent.appendChild(subtitle);
+
+          li.appendChild(thumbnail);
+          li.appendChild(textContent);
+          li.addEventListener('click', () => {
+            displayEmptyAudioPlayerData()
+            fetchAudioUrl(`https://www.youtube.com/watch?v=${item.id}`, item.title, item.channel, item.id);
+       
+      // Add more data if needed
+    });
+          // Add a download button (optional)
+          // const downloadButton = document.createElement('button');
+          // downloadButton.classList.add('download-button');
+          // downloadButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>`;
+          // li.appendChild(downloadButton);
+
+          queueList.appendChild(li);
+        });
+      }
+      function displayEmptyAudioPlayerData() {
+        audioPlayer.classList.add('active');
+        playerThumbnail.src = `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1BhBgvAdx2cQwiyvb-89VbGVzgQbB983tfw&s`;
+        playerTitle.textContent = "Loading....";
+        playerSubtitle.textContent = "Loading..";
+      }
+
+      // function changeTitleColorAtIndex(index) {
+      //   const queueList = document.getElementById('queue');
+      //   const listItems = queueList.getElementsByTagName('li');
+      //   console.log(listItems.length);
+      //   if (index >= 0) {
+      //     const titleElement = listItems[index].querySelector('.title2');
+      //     if (titleElement) {
+      //       titleElement.style.color = '#ff0000'; // Change the color to red (you can use any color)
+      //     } else {
+      //       console.error('Title element not found at index:', index);
+      //     }
+      //   } else {
+      //     console.error('Invalid index:', index);
+      //   }
+      // }
+
+      // function changeTitleColorToGreen(index) {
+      //   const queueList = document.getElementById('queue');
+      //   const listItems = queueList.getElementsByTagName('li');
+      //   console.log('reached here',listItems.length);
+      //   if (index >= 0 && index < playQueue.length) {
+      //     console.log('reaching here too');
+      //     try {
+      //       const titleElement = listItems[index].querySelector('.title2');
+      //       console.log('Title at index', index, ':', titleElement.textContent); // Print the title
+      //       console.log('Title at in'); // Print the title
+      //       if (titleElement) {
+      //         console.log("got into here")
+
+      //         try {
+      //         titleElement.style.color = '#1DB954'; // Change the color to green
+                
+      //         } catch (error) {
+      //           console.log("the color changing error is",error)
+      //         }
+
+      //       } else {
+      //         console.error('Title element not found at index:', index);
+      //       }
+      //     } catch (error) {
+      //       console.log("the error is", error)
+      //     }
+
+      //   } else {
+      //     console.error('Invalid index:', index);
+      //   }
+      // }
+
+
+
+
+      skipBackwardButton.addEventListener('click', () => {
+        if (currentTrackIndex > 0) {
+          displayEmptyAudioPlayerData()
+          currentTrackIndex--;
+          fetchAudioUrl(`https://www.youtube.com/watch?v=${playQueue[currentTrackIndex].id}`, playQueue[currentTrackIndex].title, playQueue[currentTrackIndex].subtitle, playQueue[currentTrackIndex].id);
+        }
+      });
+
+      skipForwardButton.addEventListener('click', () => {
+
+        if (currentTrackIndex < playQueue.length - 1) {
+          displayEmptyAudioPlayerData()
+          currentTrackIndex++;
+          fetchAudioUrl(`https://www.youtube.com/watch?v=${playQueue[currentTrackIndex].id}`, playQueue[currentTrackIndex].title, playQueue[currentTrackIndex].subtitle, playQueue[currentTrackIndex].id);
+        }
+      });
+      playPauseButton.addEventListener('click', () => {
+        if (audioElement.paused) {
+          audioElement.play();
+        } else {
+          audioElement.pause();
+        }
+        isPlaying = !audioElement.paused;
+        updatePlayPauseButton();
+      });
+
+      audioElement.addEventListener('play', () => {
+        isPlaying = true;
+        updatePlayPauseButton();
+      });
+
+      audioElement.addEventListener('pause', () => {
+        isPlaying = false;
+        updatePlayPauseButton();
+      });
+      audioElement.addEventListener('ended', () => {
+        console.log("ticked")
+        if (currentTrackIndex < playQueue.length - 1) {
+          displayEmptyAudioPlayerData()
+          currentTrackIndex++;
+          fetchAudioUrl(`https://www.youtube.com/watch?v=${playQueue[currentTrackIndex].id}`, playQueue[currentTrackIndex].title, playQueue[currentTrackIndex].subtitle, playQueue[currentTrackIndex].id);
+        }
+      });
+
+      // skipBackwardButton.addEventListener('click', () => {
+      //   audioElement.currentTime -= 10;
+      // });
+
+      // skipForwardButton.addEventListener('click', () => {
+      //   audioElement.currentTime += 10;
+      // });
+
+      // loopToggleButton.addEventListener('click', () => {
+      //   audioElement.loop = !audioElement.loop;
+      //   loopToggleButton.classList.toggle('active', audioElement.loop);
+      // });
+      function addToPlayQueue(track) {
+        playQueue.push(track);
+        console.log('Play Queue:', playQueue);
+      }
+      function toggleDrawer() {
+        const drawer = document.getElementById('drawer');
+        drawer.classList.toggle('open');
+        overlay.classList.add('visible');
+        populateListView();
+
+      }
+      function closeDrawer() {
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('overlay');
+
+        drawer.classList.remove('open');
+        overlay.classList.remove('visible');
+      }
+    </script>
+</body>
+
+</html>
