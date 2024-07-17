@@ -4,19 +4,20 @@ const app = express();
 const path = require('path');
 const port = 3000;
 const fs = require('fs');
-const ytdl = require("@distube/ytdl-core");
+const ytdl2 = require("@distube/ytdl-core");
 
+app.use('/Font', express.static('Font'));
 
 async function getAudioUrl(videoUrl) {
   try {
     // Fetch video information
-    const info = await ytdl.getInfo(videoUrl);
+    const info = await ytdl2.getInfo(videoUrl);
 
     // Filter formats to get audio-only formats
     const audioFormats = info.formats.filter(format => format.mimeType.includes('audio'));
 
     // Choose a format based on your criteria (highest audio quality)
-    const format = ytdl.chooseFormat(audioFormats, { quality: 'highestaudio' });
+    const format = ytdl2.chooseFormat(audioFormats, { quality: 'highestaudio' });
 
     if (!format || !format.url) {
       throw new Error('Could not find audio stream');
@@ -72,7 +73,7 @@ app.post('/fetch-urls', async (req, res) => {
 
   try {
     // Validate YouTube URL
-    if (!ytdl.validateURL(videoUrl)) {
+    if (!ytdl2.validateURL(videoUrl)) {
       throw new Error('Invalid YouTube URL');
     }
 
@@ -105,7 +106,7 @@ app.post('/suggested-audios', async (req, res) => {
 
 async function getSuggestedVideos(videoId) {
   try {
-    const info = await ytdl.getInfo(videoId);
+    const info = await ytdl2.getInfo(videoId);
     // console.log(info);
     const suggestedVideos = info.related_videos.map(video => ({
       id: video.id,
@@ -135,4 +136,3 @@ async function getSuggestedVideos(videoId) {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
-app.use('/Font', express.static('Font'));
