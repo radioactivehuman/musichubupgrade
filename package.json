@@ -11,12 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@distube/ytdl-core": "^4.13.5",
     "express": "^4.19.2",
     "nodemon": "^3.1.4",
-    "youtube-dl-exec": "^3.0.6",
-    "youtube-downloader-2": "^1.1.1",
-    "youtube-sr": "^4.3.11",
-    "ytdl-core": "^4.11.5"
+    "youtube-sr": "^4.3.11"
   }
 }
