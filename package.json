@@ -4,16 +4,22 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node main.js",
-    "dev": "nodemon main.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@distube/ytdl-core": "^4.14.4",
     "express": "^4.19.2",
+    "m3u8stream": "^0.8.6",
+    "miniget": "^4.2.3",
     "nodemon": "^3.1.4",
+    "querystring": "^0.2.1",
+    "sax": "^1.4.1",
+    "tough-cookie": "^4.1.4",
+    "undici": "^6.19.2",
+    "http-cookie-agent": "^6.0.5",
+    "vm": "^0.1.0",
     "youtube-sr": "^4.3.11"
   }
 }
