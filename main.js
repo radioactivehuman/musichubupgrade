@@ -4,53 +4,22 @@ const app = express();
 const path = require('path');
 const port = 3000;
 const fs = require('fs');
-// const ytdl2 = require("@distube/ytdl-core");
-const ytdl2 = require('./lib/ytdl-core');
+const ytdl = require("@distube/ytdl-core");
 
-app.use('/Font', express.static('Font'));
- 
-// dlfun()
-// async function dlfun() {
-//   const videoUrl = 'https://www.youtube.com/watch?v=oglRrpIsVaE';
 
-//   try {
-//     const audio = await ytdl2(videoUrl, { filter: 'audioonly' });
-    
-//     if (audio) {
-//       console.log('the returned url is', audio)
-//     } else {
-//       console.log('Error: Audio URL is undefined');
-//     }
-//   } catch (error) {
-//     console.error('Error in dlfun:', error);
-//   }
-  
-  // Download audio only
-  // const audio = await ytdl2(videoUrl, { filter: 'audioonly' });
-  // // const audio2 = ytdl2(videoUrl, { filter: 'audioonly' });
-  
-  // console.log('the returned url is',audio); 
-  // audio.pipe(fs.createWriteStream('sample-audio2.mp3'));
-  
-  // audio.on('finish', () => {
-  //   console.log('Audio downloaded successfully');
-  // });
-  
-  // audio.on('error', (error) => {
-  //   console.error('Error downloading audio:', error);
-  // });
-// }
-   
-async function getAudioUrl(videoUrl) { 
+async function getAudioUrl(videoUrl) {
   try {
     // Fetch video information
-    const audio = await ytdl2(videoUrl, { filter: 'audioonly' });
-    
-    if (audio) {
-      console.log('the returned url is', audio)
-      return audio
-    } else {
-      console.log('Error: Audio URL is undefined');
+    const info = await ytdl.getInfo(videoUrl);
+
+    // Filter formats to get audio-only formats
+    const audioFormats = info.formats.filter(format => format.mimeType.includes('audio'));
+
+    // Choose a format based on your criteria (highest audio quality)
+    const format = ytdl.chooseFormat(audioFormats, { quality: 'highestaudio' });
+
+    if (!format || !format.url) {
+      throw new Error('Could not find audio stream');
     }
     return format.url;
     
